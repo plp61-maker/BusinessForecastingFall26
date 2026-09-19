@@ -1,0 +1,142 @@
+---
+title: "Class 2 Homework Assignment"
+author: "Pamela Patton"
+date: "2026-09-20"
+output: html_document
+---
+
+```{r}
+library(readxl)
+Typical_Employee_Survey_Data_1_ <- read_excel("Typical_Employee_Survey_Data (1).xlsx", col_names = FALSE)
+```
+
+
+
+```{r}
+
+head(Typical_Employee_Survey_Data_1_)
+
+```
+
+```{r}
+# 5-point summary and boxplots for each column
+summary(Typical_Employee_Survey_Data_1_$...1)
+```
+
+```{r}
+boxplot(Typical_Employee_Survey_Data_1_$...1)
+
+```
+
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...2)
+boxplot(Typical_Employee_Survey_Data_1_$...2)
+```
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...3)
+boxplot(Typical_Employee_Survey_Data_1_$...3)
+```
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...4)
+boxplot(Typical_Employee_Survey_Data_1_$...4)
+```
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...5)
+boxplot(Typical_Employee_Survey_Data_1_$...5)
+```
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...6)
+boxplot(Typical_Employee_Survey_Data_1_$...6)
+```
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...7)
+boxplot(Typical_Employee_Survey_Data_1_$...7)
+```
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...8)
+boxplot(Typical_Employee_Survey_Data_1_$...8)
+```
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...9)
+boxplot(Typical_Employee_Survey_Data_1_$...9)
+```
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...10)
+boxplot(Typical_Employee_Survey_Data_1_$...10)
+```
+```{r}
+summary(Typical_Employee_Survey_Data_1_$...11)
+boxplot(Typical_Employee_Survey_Data_1_$...11)
+```
+
+
+
+```{r}
+#Columns that need to be converted into factors
+str(Typical_Employee_Survey_Data_1_)
+class(Typical_Employee_Survey_Data_1_$...1)
+class(Typical_Employee_Survey_Data_1_$...2)
+class(Typical_Employee_Survey_Data_1_$...3)
+class(Typical_Employee_Survey_Data_1_$...4)
+class(Typical_Employee_Survey_Data_1_$...5)
+class(Typical_Employee_Survey_Data_1_$...6)
+class(Typical_Employee_Survey_Data_1_$...7)
+class(Typical_Employee_Survey_Data_1_$...8)
+class(Typical_Employee_Survey_Data_1_$...9)
+class(Typical_Employee_Survey_Data_1_$...10)
+class(Typical_Employee_Survey_Data_1_$...11)
+```
+
+```{r}
+
+Typical_Employee_Survey_Data_1_$...2 <- as.factor(Typical_Employee_Survey_Data_1_$...2)
+Typical_Employee_Survey_Data_1_$...3 <- as.factor(Typical_Employee_Survey_Data_1_$...3)
+Typical_Employee_Survey_Data_1_$...4 <- as.factor(Typical_Employee_Survey_Data_1_$...4)
+Typical_Employee_Survey_Data_1_$...6 <- as.factor(Typical_Employee_Survey_Data_1_$...6)
+Typical_Employee_Survey_Data_1_$...7 <- as.factor(Typical_Employee_Survey_Data_1_$...7)
+Typical_Employee_Survey_Data_1_$...8 <- as.factor(Typical_Employee_Survey_Data_1_$...8)
+Typical_Employee_Survey_Data_1_$...9 <- as.factor(Typical_Employee_Survey_Data_1_$...9)
+Typical_Employee_Survey_Data_1_$...10 <- as.factor(Typical_Employee_Survey_Data_1_$...10)
+Typical_Employee_Survey_Data_1_$...11 <- as.factor(Typical_Employee_Survey_Data_1_$...11)
+```
+```{r}
+class(Typical_Employee_Survey_Data_1_$...2)
+class(Typical_Employee_Survey_Data_1_$...3)
+class(Typical_Employee_Survey_Data_1_$...4)
+class(Typical_Employee_Survey_Data_1_$...6)
+class(Typical_Employee_Survey_Data_1_$...7)
+class(Typical_Employee_Survey_Data_1_$...8)
+class(Typical_Employee_Survey_Data_1_$...9)
+class(Typical_Employee_Survey_Data_1_$...10)
+class(Typical_Employee_Survey_Data_1_$...11)
+```
+
+
+```{r}
+# Histograms for columns 1 and 5 (numeric) and barplots for columns 2,3,4,6,7,8,9,10,11 (factors)
+hist(Typical_Employee_Survey_Data_1_$...1)
+hist(Typical_Employee_Survey_Data_1_$...5)
+```
+```{r}
+barplot(table(Typical_Employee_Survey_Data_1_$...2), main = "Column 2", xlab = "Category", ylab = "Frequency", col = "Blue")
+```
+```{r}
+barplot(table(Typical_Employee_Survey_Data_1_$...3), main = "Column 3", xlab = "Category", ylab = "Frequency", col = "Blue")
+barplot(table(Typical_Employee_Survey_Data_1_$...4), main = "Column 4", xlab = "Category", ylab = "Frequency", col = "Blue")
+barplot(table(Typical_Employee_Survey_Data_1_$...6), main = "Column 6", xlab = "Category", ylab = "Frequency", col = "Blue")
+barplot(table(Typical_Employee_Survey_Data_1_$...7), main = "Column 7", xlab = "Category", ylab = "Frequency", col = "Blue")
+barplot(table(Typical_Employee_Survey_Data_1_$...8), main = "Column 8", xlab = "Category", ylab = "Frequency", col = "Blue")
+barplot(table(Typical_Employee_Survey_Data_1_$...9), main = "Column 9", xlab = "Category", ylab = "Frequency", col = "Blue")
+barplot(table(Typical_Employee_Survey_Data_1_$...10), main = "Column 10", xlab = "Category", ylab = "Frequency", col = "Blue")
+barplot(table(Typical_Employee_Survey_Data_1_$...11), main = "Column 11", xlab = "Category", ylab = "Frequency", col = "Blue")
+```
+
+
+```{r}
+# Scatterplots for column 1 vs 5 and 1 vs 4
+plot(Typical_Employee_Survey_Data_1_$...1, Typical_Employee_Survey_Data_1_$...5, main = "Column 1 vs Column 5", xlab = "Column 1", ylab = "Column 5", col = "Blue", pch = 19)
+```
+```{r}
+plot(Typical_Employee_Survey_Data_1_$...1, Typical_Employee_Survey_Data_1_$...4, main = "Column 1 vs Column 4", xlab = "Column 1", ylab = "Column 4", col = "Red", pch = 19)
+```
+
