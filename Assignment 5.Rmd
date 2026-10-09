@@ -1,0 +1,79 @@
+---
+title: "Assignment 5"
+author: "plp61@scarletmail.rutgers.edu"
+date: "10/9/2026"
+output: html_document
+---
+  
+  
+```{r}
+
+library(fpp2)
+library(readxl)
+busineesforecasting_us_average_prices_monthly <-read_excel("busineesforecasting_us_average_prices_monthly.xlsx")
+
+#Doing this code to create the subset again of the original dataset because I want to filter the items to only be egg data.
+eggs <- subset (busineesforecasting_us_average_prices_monthly, grepl("egg", item, ignore.case=TRUE))
+
+#Looking to see the class of the subeset It returns "data.frame" so we have to tell R it is a time series 
+class(eggs)
+
+#Making the egg subset into a time series. (2015,1) is the first data recorded (January 2015) and the frequency is 12 because there are 12 months in the year.
+ts_eggs <-ts(eggs$price,start = c(2015,1),frequency = 12)
+
+
+
+#Shows the first 5 months of 2015 and their prices. June had the highest price of $2.57.
+head(ts_eggs)
+
+#This plots the all months and their prices. There are two big spikes around 2023 and 2025.
+plot(ts_eggs)
+
+#This breaks the data set down into the seasonal-trend decomposition plot. We can see that there is a strong seasonality component and is stable every year. The seasonality is between -0.1 and 0.1 around the trend. It also shows us that there is a non-consistent trend. In 2022-2023 we see a strong increase, a decline between 2023-2024 and then another strong increase 2024-2025, ending with a sharp decrease in 2025-2026. Most of the variation in this data set comes from the trend, not seasonality. The seasonality variation is -0.1 - 0.1 and the trend variation is 1.5 - 4.5. 
+stl_decomp <- stl(ts_eggs,s.window ="periodic")
+plot(stl_decomp)
+
+
+#This shows the attributes of the stl_decomp. 
+attributes(stl_decomp)
+
+#Seasonally adjusted series. Removes regular monthly effects to see the underlying trend
+seasadj(stl_decomp)
+
+#The black line on the plot is the original egg prices and the red line is the seasonally adjusted prices. We can see on here that seasonality is small because the black and red lines are close to each other on the graph. We can see how this works because the red line is smoother during 2016-2022 time frame because it removes some of the regular monthly ups/downs. Since they follow each other closely, most of the variation in the egg prices are most likely from changes in the underlying trend rather than any seasonal effects.
+plot(ts_eggs)
+lines(seasadj(stl_decomp), col="Red")
+
+
+#This creates the forecast for the next 15 months. It gives us the point forecast, Lo 80 and Hi 80 (lower and upper bounds of 80% prediction interval) and Lo 95 and Hi 95 (the lower and upper bounds of the 95% prediction interval). In the plot the black line shows the actual egg prices from 2015-2026 and the blue is the forecast. The forecast doesn't show any major upward/downward trends. The dark grey shade is the 80% interval and the ligher grey shade is the 95% prediction interval. This graph is ETS(M,Ad,N) which tells us multiplicative errors, additive and no seasonality in the ETS model. 
+f_stl <- forecast(stl_decomp)
+f_stl <- forecast(stl_decomp,h=15)
+f_stl
+plot(f_stl)
+
+
+#This is another way to perform decomposition. The seasonally adjusted series shows low and stable prices from 2017-2021, and there are significant increases in 2022,2023, and 2025. Since both decoposition models produced similar seasonally adjusted values, the seasonal pattern in the egg price data appears to be stable over time. This increases the confidence in the decompositon results.
+decomp_elec <- decompose(ts_eggs)
+attributes(decomp_elec)
+seasadj(decomp_elec)
+
+#This will show us the MAPE between the 3 models so that we can compare them. The f_stl model, Holts model, and ETS model. The MAPE shows how much percent the forecast is off by.
+#The MAPE for f_stl is 6.808, HW is 11.017 and ETS is 6.827. f_stl forecast is the best at 6.81% and Holts model is the worst at 11.02%.
+
+f_stl <- forecast(stl_decomp)
+accuracy(f_stl)
+HW <- HoltWinters(ts_eggs)
+accuracy(forecast(HW))
+ETS <- ets(ts_eggs)
+accuracy(forecast(ETS))
+
+
+
+```
+
+
+
+
+
+
+
