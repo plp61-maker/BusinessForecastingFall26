@@ -1,0 +1,91 @@
+---
+title: "ARIMA Homework"
+author: "plp61@scarletmail.rutgers.edu"
+date: "11/20/2026"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(fpp2)
+library(forecast)
+library(readxl)
+busineesforecasting_us_average_prices_monthly <-read_excel("busineesforecasting_us_average_prices_monthly.xlsx")
+eggs <- subset (busineesforecasting_us_average_prices_monthly, grepl("egg", item, ignore.case=TRUE))
+class(eggs)
+ts_eggs <-ts(eggs$price,start = c(2015,1),frequency = 12)
+plot(ts_eggs)
+#Downloading the dataset and creating the time series egg subset.
+
+
+ndiffs(ts_eggs)
+#Output is 1 so the series requires 1 difference before modeling 
+tsdisplay(ts_eggs)
+ts_eggsdiff1 <- diff(ts_eggs, differences=1)
+plot(ts_eggsdiff1)
+tsdisplay(ts_eggsdiff1)
+
+auto_fit <- auto.arima(ts_eggs, trace=TRUE, stepwise = FALSE)
+auto_fit
+#AIC= 28.97 : strong balance between goodness of fit and model complexity. Sigma^2 = 0.06896 is small and suggests that the model captures most of the variation in the data
+
+attributes(auto_fit)
+plot(forecast(auto_fit,h=5,level=c(99.5)))
+
+# 5 Ways to do Residual Analysis
+Acf(auto_fit$residuals)
+#All of the ACF lines are within the significance bounds. This suggests that little autocorrelation remains.  
+
+Box.test(residuals(auto_fit), lag=20, type="Ljung")
+#The p-value = 0.8264 > 0.05. The box test was not significant and suggests there is no evidence of autocorrelation remaining.
+
+plot.ts(residuals(auto_fit))
+#Shows the residuals are centered around zero and have no systematic trend or seasonal pattern. 
+
+hist(auto_fit$residuals)
+#Most residuals are centered around zero and there is a roughly bell-shaped distribution.
+
+tsdiag(auto_fit)
+#Standardized residuals: fluctuate randomly around zero
+#ACF of residuals: Shows all autocorrelation values fall within the significance
+#p-values for Ljung-Box Statistic: All are greater than 0.05 across the lags
+#All indicate there is no autocorrelation remaining in the residuals and supports the ARIMA model.
+
+#Seasonal Data
+plot(euretail)
+nsdiffs(euretail)
+ndiffs(euretail)
+ndiffs((diff(euretail,4)))
+tsdisplay(diff(diff(euretail,4)))
+fit3 <- auto.arima(euretail,trace=TRUE, stepwise = FALSE )
+fit3
+#There is one regular difference and one seasonal difference to remove trend and quarterly seasonality. Three moving average terms and one seasonal moving average term were included to capture short-term and seasonal dependencies in the data. AIC = 67.26 and Sigma^2 = 0.156 suggesting a strong fit while maintaining model parsimony.
+
+#Residual Analysis
+Acf(fit3$residuals)
+#All residual auto correlations are within the 95% confidence bounds. No statistically significant autocorrelation remains in the residuals, which suggests the model captured both the trend and seasonal components. 
+
+Box.test(residuals(fit3), lag=20, type="Ljung")
+#P-value = 0.9951 > 0.05. The null hypothesis of independent residuals can't be rejected. It suggests there are no significant auto correlation remaining in the residuals. 
+
+plot.ts(residuals(fit3))
+#No apparent trend/seasonal behavior. Suggests that the model has successfully captured the underlying trend and seasonal components. There are a few larger residuals but they appear to be isolated.
+
+hist(fit3$residuals)
+#Centered around zero and bell shaped, generally unbiased and normally distributed. 
+
+tsdiag(fit3)
+#Standardized residuals: most fall between -2 and 2. Randomly distributed 
+#ACF: Within the blue confidence bounds
+#Ljung-Box p-values: Above the significance line
+
+#Accuracy models
+accuracy(auto_fit)
+#RMSE = 0.2578, lower RMSE indicates better predictive performance. MAE = 0.1770, small forecast error. MAPE = 7.25%, models forecasts differ from actual values. MASE = 0.2133. ACF1= 0.0601
+
+accuracy(fit3)
+#RMSE = 0.3661 and MAE = 0.279, indicates small forecast errors. MAPE = 0.289 suggesting high forecast accuracy. MASE = 0.227, ACF1 = 0.006
+```
+
+
